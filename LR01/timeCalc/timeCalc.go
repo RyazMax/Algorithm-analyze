@@ -49,7 +49,8 @@ func main() {
 	}
 
 	var duration time.Duration
-	for i := 0; i < 10; i++ {
+	cnt := 1000
+	for i := 0; i < cnt; i++ {
 		str1 := randStringRunes(n)
 		str2 := randStringRunes(n)
 		t := time.Now()
@@ -57,6 +58,6 @@ func main() {
 		duration += time.Since(t)
 	}
 
-	fmt.Println(duration / 10)
+	fmt.Println(duration / 3000)
 
 }

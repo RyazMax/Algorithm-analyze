@@ -51,9 +51,10 @@ func MergeSort(a []int) {
 
 // RadixSort sortes int array of ONLY POSITIVE numbers with LSD method
 func RadixSort(a []int) {
-	digits := make([]int, 4)
+	digits := make([]int, 4096) // 65536
 	anses := make([]int, len(a))
-	mask := 0x3
+	mask := 0xFFF // FFFF
+	shift := uint(12)
 	count := uint(0)
 
 	for mask > 0 {
@@ -63,7 +64,7 @@ func RadixSort(a []int) {
 		}
 		// Подсчитываем число чисел
 		for _, val := range a {
-			digits[val&mask>>(count*2)]++
+			digits[val&mask>>(count*shift)]++
 		}
 		// Пересчитываем границы диапозона
 		for i := range digits {
@@ -73,11 +74,11 @@ func RadixSort(a []int) {
 		}
 		// Упорядочивем значения
 		for i := range a {
-			anses[digits[a[len(a)-i-1]&mask>>(count*2)]-1] = a[len(a)-i-1]
-			digits[a[len(a)-i-1]&mask>>(count*2)]--
+			anses[digits[a[len(a)-i-1]&mask>>(count*shift)]-1] = a[len(a)-i-1]
+			digits[a[len(a)-i-1]&mask>>(count*shift)]--
 		}
-		copy(a, anses)
-		mask <<= 2
+		a, anses = anses, a
+		mask <<= shift
 		count++
 	}
 }

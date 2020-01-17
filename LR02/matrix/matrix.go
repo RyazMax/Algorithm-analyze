@@ -69,7 +69,6 @@ func RegMulInt(a, b [][]int) [][]int {
 			}
 		}
 	}
-
 	return res
 }
 
