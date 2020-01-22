@@ -1,54 +1,57 @@
 package funcs
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
-func TestKmpNullPattern(t *testing.T) {
-	got := Kmp("", "Aloha")
+func TestKmpOnlineNullPattern(t *testing.T) {
+	got := KmpOnline("", strings.NewReader("Aloha"))
 	expected := []int{}
 
 	assertSliceEqual(got, expected, "on null pattern", t)
-	got = Kmp("", "")
+	got = KmpOnline("", strings.NewReader(""))
 	expected = []int{}
 
 	assertSliceEqual(got, expected, "on null pattern", t)
 }
 
-func TestKmpNullStr(t *testing.T) {
-	got := Kmp("A", "")
+func TestKmpOnlineNullStr(t *testing.T) {
+	got := KmpOnline("A", strings.NewReader(""))
 	expected := []int{}
 
 	assertSliceEqual(got, expected, "on null str", t)
 
-	got = Kmp("abacaba", "")
+	got = KmpOnline("abacaba", strings.NewReader(""))
 	expected = []int{}
 
 	assertSliceEqual(got, expected, "on null str", t)
 }
 
-func TestKmpCyrillic(t *testing.T) {
-	got := Kmp("Дом", "домЭтонеДом")
+func TestKmpOnlineCyrillic(t *testing.T) {
+	got := KmpOnline("Дом", strings.NewReader("домЭтонеДом"))
 	expected := []int{8}
 
 	assertSliceEqual(got, expected, "on cyrillic letters", t)
 
-	got = Kmp("аба", "аабакаба")
+	got = KmpOnline("аба", strings.NewReader("аабакаба"))
 	expected = []int{1, 5}
 
 	assertSliceEqual(got, expected, "on cyrillic letters", t)
 }
 
-func TestKmpOk(t *testing.T) {
-	got := Kmp("a", "abAba")
+func TestKmpOnlineOk(t *testing.T) {
+	got := KmpOnline("a", strings.NewReader("abAba"))
 	expected := []int{0, 4}
 
 	assertSliceEqual(got, expected, "on ok str", t)
 
-	got = Kmp("ab", "abacbaaba")
+	got = KmpOnline("ab", strings.NewReader("abacbaaba"))
 	expected = []int{0, 6}
 
 	assertSliceEqual(got, expected, "on ok str", t)
 
-	got = Kmp("abaa", "aabaaa")
+	got = KmpOnline("abaa", strings.NewReader("aabaaa"))
 	expected = []int{1}
 
 	assertSliceEqual(got, expected, "on ok str", t)
