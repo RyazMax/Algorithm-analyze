@@ -1,5 +1,8 @@
 main:
-	g++ main.cpp -o main.out
+	g++ main.cpp -o main.out -pthread
+
+profile:
+	g++ profile.cpp -o profile.out -pthread -O2
 
 tests: test_matrix.cpp matrix.hpp
 	g++ test_matrix.cpp -o test.out

@@ -8,9 +8,11 @@ func assertSliceEqual(got, expected []int, msg string, t *testing.T) {
 		pass = false
 	}
 
-	for i := range got {
-		if got[i] != expected[i] {
-			pass = false
+	if pass {
+		for i := range got {
+			if got[i] != expected[i] {
+				pass = false
+			}
 		}
 	}
 
