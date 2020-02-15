@@ -10,46 +10,69 @@ FractalDrawer::~FractalDrawer() {
 }
 
 void FractalDrawer::draw(size_t iter, bool delay) {
+    timespec t1, t2;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t1);
 
-    // Generate
-    Fractal frac(FracElem({Point(0.5, 0), Point(0.5, 1)}));
+    // Инциализация массива итераций
+    int it_count[iter];
+    double abs_shift = 1;
     for (size_t i = 0; i < iter; ++i) {
-        Fractal next;
-        int count = 0;
-        for (auto it = frac.begin(); it != frac.end(); ++it, ++count) {
-            auto new_elems = Fractal::mutate(*it, count % 9);
-            next.add(new_elems);
-        }
-        frac = next;
+        it_count[i] = 0;
+        abs_shift /= 3;
     }
 
-    // Draw
-    // Screen size
-    int width = _drawer->width() - 1;
-    int height = _drawer->height();
-    Point scale(height, height);
+    Point shift = Point(abs_shift, abs_shift);
+    Point inv_x = Point(-1, 1), inv_y = Point(1, -1);
 
-    // Shifts
-    double inner_scale = 2. / (pow(3, iter));
-    // Draw edges
+    Point scale = Point(_drawer->height(), _drawer->height());
+    Point last = Point(0, 0);
+    Point pos = Point(0, 0);
 
-    Point last;
-    for (auto it = frac.begin(); it != frac.end(); ++it) {
-        Point shift = it->shift();
-        Point p1 = ((*(it->begin()) + shift) * inner_scale + Point(1, 0.1)) * scale * 0.5;
-        if (it != frac.begin()) _drawer->draw_line(last.x(), last.y(), p1.x(), p1.y());
+    for (;it_count[iter - 1] == 0;) {
+        shift = shift * 0.5;
+        Point shift_x = Point(shift.x(), 0), shift_y = Point(0, shift.y());
+        _drawer->draw_line(last * scale, (pos + shift) * scale);
+        _delay(delay);
+        _drawer->draw_line((pos + shift) * scale, (pos + shift + shift_y * 4) * scale);
+        _delay(delay);
+        _drawer->draw_line((pos + shift + shift_y * 4) * scale, (pos + shift + shift_y * 4 + shift_x * 2) * scale);
+        _delay(delay);
+        _drawer->draw_line((pos + shift + shift_y * 4 + shift_x * 2) * scale, (pos + shift + shift_x * 2) * scale);
+        _delay(delay);
+        _drawer->draw_line((pos + shift + shift_x * 2) * scale, (pos + shift + shift_x * 4) * scale);
+        _delay(delay);
+        _drawer->draw_line((pos + shift + shift_x * 4) * scale, (pos + shift + shift_x * 4 + shift_y * 4) * scale);
+        _delay(delay);
+        last = pos + shift + shift_x * 4 + shift_y * 4;
+        shift = shift * 2;
+        pos = pos + shift * 3;
 
-        for (auto in_it = it->begin()+1; in_it != it->end(); ++in_it) {
-            Point p2 = ((*in_it + shift) * inner_scale + Point(1, 0.1)) * scale * 0.5;
-            _drawer->draw_line(p1.x(), p1.y(), p2.x(), p2.y());
-            p1 = p2;
-        }
-
-        last = p1;
-        if (delay) {
-            QApplication::processEvents(QEventLoop::AllEvents, 50);
-            _drawer->flush();
+        // Обновление массива итераций
+        for (size_t i = 0; i < iter; ++i) {
+            it_count[i]++;
+            if (it_count[i] == 9) {
+                it_count[i] = 0;
+            } else {
+                if (it_count[i] == 3 || it_count[i] == 6) {
+                    shift = shift * inv_y;
+                } else {
+                    shift = shift * inv_x;
+                }
+                break;
+            }
         }
     }
     _drawer->flush();
+
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t2);
+
+    qDebug("%u", t2.tv_nsec - t1.tv_nsec);
+}
+
+void FractalDrawer::_delay(bool delay)
+{
+    if (delay) {
+        QApplication::processEvents(QEventLoop::AllEvents, 50);
+        _drawer->flush();
+    }
 }

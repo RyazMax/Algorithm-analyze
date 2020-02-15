@@ -21,6 +21,11 @@ void Drawer::draw_line(int x1, int y1, int x2, int y2) {
     painter.drawLine(x1, _canvas->height() - y1, x2, _canvas->height() - y2);
 }
 
+void Drawer::draw_line(Point p1, Point p2)
+{
+    draw_line(p1.x(), p1.y(), p2.x(), p2.y());
+}
+
 void Drawer::flush() {
     _canvas->setPixmap(_pxp);
 }

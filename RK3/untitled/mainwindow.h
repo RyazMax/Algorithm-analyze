@@ -2,8 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
 
 #include "fractaldrawer.h"
+#include "recursivefractaldrawer.h"
 #include "drawer.h"
 
 QT_BEGIN_NAMESPACE

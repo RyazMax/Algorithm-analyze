@@ -10,8 +10,10 @@ public:
     FractalDrawer(Drawer *drawer);
     virtual ~FractalDrawer();
 
-    void draw(size_t iter, bool delay);
+    virtual void draw(size_t iter, bool delay);
 protected:
+    void _delay(bool delay);
+
     Drawer *_drawer;
 };
 

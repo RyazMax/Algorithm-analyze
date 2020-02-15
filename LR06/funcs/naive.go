@@ -40,14 +40,14 @@ func createRange(size int) []int {
 func FindShortestNaive(mat [][]int) (route []int, dist int) {
 	dist = -1
 	routes := createRange(len(mat))
+	route = make([]int, len(routes))
 
 	permutator := permutation.New(permutation.IntSlice(routes))
 
 	for permutator.Next() {
 		cost := countRoute(routes, mat)
 		if dist < 0 || dist > cost {
-			// TODO make copy to result because last .Next() makes the very fist permutation
-			route = routes
+			copy(route, routes)
 			dist = cost
 		}
 	}

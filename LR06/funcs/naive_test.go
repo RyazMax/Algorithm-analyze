@@ -108,4 +108,17 @@ func TestFindShortestNaiveOk(t *testing.T) {
 	if dist != 2 {
 		t.Error("GOT", dist, "EXPECTED", 2)
 	}
+
+	// 3x3 matrix
+	mat = [][]int{
+		[]int{0, 4, 2},
+		[]int{5, 0, 2},
+		[]int{1, 2, 0},
+	}
+	route, dist = FindShortestNaive(mat)
+
+	AssertSliceEqual(route, []int{1, 2, 0}, "3x3 matrix", t)
+	if dist != 3 {
+		t.Error("GOT", dist, "EXPECTED", 3)
+	}
 }

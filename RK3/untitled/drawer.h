@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QPainter>
 
+#include "point.h"
+
 class Drawer
 {
 public:
@@ -14,6 +16,7 @@ public:
     int height() const;
 
     void draw_line(int x1, int y1, int x2, int y2);
+    void draw_line(Point p1, Point p2);
     void flush();
 private:
     QPixmap _pxp;
